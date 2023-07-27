@@ -1,43 +1,59 @@
 let myLibrary = [];
 
-let id = 0;
+let uuid = 0;
 
 function Book(author, title, numPages, readStatus) {
-  // the constructor...
-  //   : author, title, number of pages, whether it’s been read and anyt
   this.author = author;
   this.title = title;
   this.numPages = numPages;
   this.readStatus = readStatus;
+  this.id = uuid;
+  uuid++;
 }
 
 function addBookToLibrary(author, title, numPages, readStatus) {
-  // do stuff here
-  // pull out data from popup form
-  // call book constructor
-  // push to myLibrary array
   myLibrary.push(new Book(author, title, numPages, readStatus));
 }
 
 function renderLibrary() {
   let content = document.querySelector(".content");
+  content.innerHTML = "";
   for (let i = 0; i < myLibrary.length; i++) {
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
     const titleDiv = document.createElement("div");
+    titleDiv.classList.add("book-title");
     titleDiv.innerText = myLibrary[i].title;
     bookDiv.appendChild(titleDiv);
     const authorDiv = document.createElement("div");
+    authorDiv.classList.add("book-author");
     authorDiv.innerText = myLibrary[i].author;
     bookDiv.appendChild(authorDiv);
     const pagesDiv = document.createElement("div");
-    pagesDiv.innerText = myLibrary[i].numPages;
+    pagesDiv.innerText = myLibrary[i].numPages + " pages";
     bookDiv.appendChild(pagesDiv);
     const readDiv = document.createElement("div");
-    readDiv.innerText = myLibrary[i].readStatus;
+    const readLabel = document.createElement("label");
+    readLabel.innerText = "Read: ";
+    readLabel.htmlFor = "book-read";
+    readDiv.appendChild(readLabel);
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = myLibrary[i].readStatus;
+    checkbox.id = "book-read";
+    readDiv.appendChild(checkbox);
     bookDiv.appendChild(readDiv);
     content.appendChild(bookDiv);
   }
+}
+
+function openPopup() {
+  let popup = document.querySelector(".popup");
+  popup.classList.add("open-popup");
+}
+function closePopup() {
+  let popup = document.querySelector(".popup");
+  popup.classList.remove("open-popup");
 }
 
 addBookToLibrary("J. R. R. Tolkien", "The Hobbit", 304, true);
