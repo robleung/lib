@@ -46,6 +46,19 @@ function renderLibrary() {
     content.appendChild(bookDiv);
   }
 }
+function addBook(event) {
+  const form = document.querySelector("form");
+  const inputs = form.querySelectorAll("input");
+  const myObject = {};
+
+  inputs.forEach((element) =>
+    element.type != "checkbox"
+      ? (myObject[element.name] = element.value)
+      : (myObject[element.name] = element.checked)
+  );
+  console.log(myObject);
+  event.preventDefault();
+}
 
 function openPopup() {
   let popup = document.querySelector(".popup");
