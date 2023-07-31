@@ -15,11 +15,30 @@ function addBookToLibrary(author, title, numPages, readStatus) {
   myLibrary.push(new Book(author, title, numPages, readStatus));
 }
 
+function deleteBook(e) {
+  let delId = e.target.parentElement.id;
+  for (let i = 0; i < myLibrary.length; i++) {
+    if (delId == myLibrary[i].id) myLibrary.splice(i, 1);
+  }
+  renderLibrary();
+}
+
+function updateStatus(e) {
+  {
+    let statusId = e.target.parentElement.id;
+    for (let i = 0; i < myLibrary.length; i++) {
+      if (statusId == myLibrary[i].id)
+        myLibrary[i].readStatus = e.target.checked;
+    }
+  }
+}
+
 function renderLibrary() {
   let content = document.querySelector(".content");
   content.innerHTML = "";
   for (let i = 0; i < myLibrary.length; i++) {
     const bookDiv = document.createElement("div");
+    bookDiv.setAttribute("id", myLibrary[i].id);
     bookDiv.classList.add("book");
     const titleDiv = document.createElement("div");
     titleDiv.classList.add("book-title");
@@ -41,8 +60,14 @@ function renderLibrary() {
     checkbox.type = "checkbox";
     checkbox.checked = myLibrary[i].readStatus;
     checkbox.id = "book-read";
+    checkbox.addEventListener("click", updateStatus);
     readDiv.appendChild(checkbox);
     bookDiv.appendChild(readDiv);
+    const del = document.createElement("button");
+    del.innerText = "Delete";
+    del.addEventListener("click", deleteBook);
+    bookDiv.append(del);
+
     content.appendChild(bookDiv);
   }
 }
@@ -53,10 +78,19 @@ function addBook(event) {
 
   inputs.forEach((element) =>
     element.type != "checkbox"
-      ? (myObject[element.name] = element.value)
-      : (myObject[element.name] = element.checked)
+      ? (myObject[element.name.split("-")[1]] = element.value)
+      : (myObject[element.name.split("-")[1]] = element.checked)
   );
   console.log(myObject);
+  addBookToLibrary(
+    myObject["title"],
+    myObject["author"],
+    myObject["pages"],
+    myObject["status"]
+  );
+  renderLibrary();
+  form.reset();
+  closePopup();
   event.preventDefault();
 }
 
